@@ -1,32 +1,18 @@
-pipeline {
+pipeline{
     agent any
-
-    stages {
-        stage ('Compile Stage') {
-
-            steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn clean compile'
-                }
+    environment {
+        PATH = "$PATH:/opt/apache-maven-3.8.5/bin"
+    }
+    stages{
+       stage('GetCode'){
+            steps{
+                git 'https://github.com/selvigugan/hello-world.git'
             }
-        }
-
-        stage ('Testing Stage') {
-
-            steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn test'
-                }
+         }        
+       stage('Build'){
+            steps{
+                sh 'mvn clean package'
             }
-        }
-
-
-        stage ('Deployment Stage') {
-            steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn deploy'
-                }
-            }
-        }
+         }
     }
 }
